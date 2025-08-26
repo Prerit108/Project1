@@ -1,7 +1,8 @@
 from setuptools import find_packages,setup
 from typing import List
 
-HYOHEN_E_DOT = "-e ."
+HYOHEN_E_DOT = "-e ."  ## It is added in the requirement.txt , to link both the files.
+## when we run requirement.txt file it will automatically run this file.
 def get_requirements(file_path:str) -> List[str]:
     """This function will return the list of the requirements"""
     requirements =[]
