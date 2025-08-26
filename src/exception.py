@@ -1,5 +1,5 @@
 import sys  #commonly used to access runtime details like the current exception traceback.
-import logging
+from src.logger import  logging
 
 
 
@@ -19,4 +19,14 @@ class CustomException(Exception):
     def __str__(self):
         return self.error_message
     
+
+    ## Checking if it is working
+"""if __name__ == "__main__":
+    try:
+        a =1/0
+    except Exception as ex:
+        err = CustomException(ex,sys)
+        logging.info(err)
+        raise err from None""" ## from None will only show your custom exception, not the original ZeroDivisionError in the terminal
+
 
