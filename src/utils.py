@@ -6,6 +6,7 @@ from sklearn.metrics import r2_score
 import numpy as np
 import pandas as pd
 import dill
+from sklearn.model_selection import RandomizedSearchCV
 
 from src.exception import CustomException
 
@@ -20,21 +21,37 @@ def save_object(file_path,obj):
     except Exception as ex:
         raise CustomException(ex,sys)
 
-def evaluate_model(x_train,y_train,x_test,y_test,models):
+def evaluate_model(x_train,y_train,x_test,y_test,models,params):
     try:
         report = {}
-        i = 0
-        for model in list(models.values())   :
-            model.fit(x_train,y_train)
+        # Iterate through each model using its name and the model object
+        for model_name, model in models.items():
+            # Check if a parameter grid is defined for the current model in the params dict
+            if model_name in params:
+                para = params[model_name]
+                
+                randomcv = RandomizedSearchCV(estimator=model, param_distributions=para,
+                                              n_jobs=-1, verbose=0, n_iter=10, cv=3)
+                randomcv.fit(x_train, y_train)
+                
+                # Use the best estimator found by the search
+                best_estimator = randomcv.best_estimator_
+                y_pred_test = best_estimator.predict(x_test)
 
-            y_pred_test = model.predict(x_test)
+                test_model_score = r2_score(y_test, y_pred_test)
+                report[model_name] = test_model_score
 
-            r2_score_test = r2_score(y_test,y_pred_test)
+            else:
+                # If no parameters are specified, just fit the model with its default settings
+                model.fit(x_train, y_train)
+                y_pred_test = model.predict(x_test)
 
-            report[list(models.keys())[i]] = r2_score_test
-            i += 1
-
+                test_model_score = r2_score(y_test, y_pred_test)
+                report[model_name] = test_model_score
+        
         return report
+
+
     
 
     except Exception as ex:
