@@ -13,6 +13,8 @@ from dataclasses import dataclass
 from src.components.data_transformation import DataTransformation
 from src.components.data_transformation import DataTransformationConfig
 
+from src.components.model_trainer import ModelTrainerConfig,ModelTrainer
+
 @dataclass   ## Python auto-generates several special methods based on the class attributes.
 ## No need to manually define __init__ etc.
 class Dataingestionconfig:
@@ -60,10 +62,11 @@ if __name__ == "__main__":
     train_data,test_data = obj1.initiate_data_ingestion()
 
     data_transformation = DataTransformation()
-    data_transformation.initiate_data_transformation(train_data,test_data)
+    train_transformed,test_transformed,preprocessor_path =data_transformation.initiate_data_transformation(train_data,test_data)
 
-
-
+    model_trainer = ModelTrainer()
+    print(model_trainer.initiate_model_trainer(train_transformed,test_transformed))
+    
 
 
 
