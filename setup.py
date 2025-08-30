@@ -25,6 +25,4 @@ setup(
     author_email="cloudsharma909@gmail.com",
     packages = find_packages(),
     install_requires = get_requirements("requirement.txt")
-
-
 )

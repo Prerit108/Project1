@@ -10,9 +10,13 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
 
+from src.components.data_transformation import DataTransformation
+from src.components.data_transformation import DataTransformationConfig
+
 @dataclass   ## Python auto-generates several special methods based on the class attributes.
 ## No need to manually define __init__ etc.
 class Dataingestionconfig:
+    ## Giving path to store different data
     train_data_path: str = os.path.join("artifacts","train.csv")   ## train_data_path is of str type
     test_data_path: str = os.path.join("artifacts","test.csv")
     raw_data_path: str = os.path.join("artifacts","raw.csv")
@@ -53,7 +57,11 @@ class Dataingestion:
 
 if __name__ == "__main__":
     obj1 = Dataingestion()
-    obj1.initiate_data_ingestion()
+    train_data,test_data = obj1.initiate_data_ingestion()
+
+    data_transformation = DataTransformation()
+    data_transformation.initiate_data_transformation(train_data,test_data)
+
 
 
 
